@@ -4,13 +4,14 @@ const express = require("express");
 const { MongoClient } = require("mongodb");
 const app = express();
 
+app.use(express.json());
+app.use(express.static(__dirname));
+
 const client = new MongoClient(process.env.MONGODB_URI);
 
 app.get("/", function (req, res) {
     res.sendFile(__dirname + "/index.html");
 });
-
-app.use(express.static(__dirname));
 
 client.connect()
     .then(() => console.log("Connected to MongoDB"))
@@ -24,8 +25,6 @@ app.get("/api/message", async function (req, res) {
 
     res.json(message);
 });
-
-app.use(express.json());
 
 app.post("/api/message", async function (req, res) {
     const database = client.db("mini_vercel_db");
