@@ -4,6 +4,13 @@ const message = document.getElementById("message");
 
 button.addEventListener("click", async function () {
 
+fetch("/api/message")
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById("message").textContent = data.message;
+    });
+
+
     await fetch("/api/message", {
         method: "POST",
         headers: {
