@@ -13,9 +13,11 @@ app.get("/", function (req, res) {
     res.sendFile(__dirname + "/index.html");
 });
 
-client.connect()
-    .then(() => console.log("Connected to MongoDB"))
-    .catch(error => console.log(error));
+async function connectDB() {
+    if (!client.topology || !client.topology.isConnected()) {
+        await client.connect();
+    }
+}
 
 app.get("/api/message", async function (req, res) {
     const database = client.db("mini_vercel_db");
@@ -26,7 +28,9 @@ app.get("/api/message", async function (req, res) {
     res.json(message);
 });
 
-app.post("/api/message", async function (req, res) {
+app.get("/api/message", async function (req, res) {
+
+    await connectDB();
     const database = client.db("mini_vercel_db");
     const collection = database.collection("messages");
 
